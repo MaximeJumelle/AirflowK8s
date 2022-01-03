@@ -1,0 +1,12 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: dags
+  labels:
+    type: local
+spec:
+  storageClassName: local-path
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
