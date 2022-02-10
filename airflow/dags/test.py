@@ -2,6 +2,8 @@ import os
 import json
 import requests
 import pytz
+import time
+import logging
 
 from datetime import date, datetime, timedelta
 from airflow.utils.dates import days_ago
@@ -14,7 +16,7 @@ default_args = {
     'owner': 'maxime.jumelle',
     'depends_on_past': False,
     'start_date': days_ago(0, hour=1),
-    'retries': 1,
+    'retries': 0,
     'retry_delay': timedelta(seconds=10)
 }
 
@@ -25,8 +27,20 @@ def dag_test():
     """
     @task()
     def hello():
-      print("Hello !")
+      return "Hello !"
+
+    @task()
+    def parallel1(msg):
+      time.sleep(10)
+      logging.info(msg)
+
+    @task()
+    def parallel2(msg):
+      time.sleep(10)
+      logging.error(msg)
     
-    hello()
+    hi = hello()
+    parallel1(hi)
+    parallel2(hi)
 
 test = dag_test()
